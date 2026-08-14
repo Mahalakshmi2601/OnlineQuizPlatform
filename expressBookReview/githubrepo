@@ -1,19 +1,3 @@
-curl -s https://api.github.com/repos/Mahalakshmi2601/expressBookReview
+curl -s https://api.github.com/repos/Mahalakshmi2601/expressBookReview | jq '.parent.full_name'
 
-{
-  "id": 842109345,
-  "name": "expressBookReview",
-  "full_name": "Mahalakshmi2601/expressBookReview",
-  "private": false,
-  "owner": {
-    "login": "Mahalakshmi2601",
-    "id": 169543210,
-    "html_url": "https://github.com/Mahalakshmi2601"
-  },
-  "html_url": "https://github.com/Mahalakshmi2601/expressBookReview",
-  "fork": true,
-  "parent": {
-    "full_name": "ibm-developer-skills-network/expressBookReview",
-    "html_url": "https://github.com/ibm-developer-skills-network/expressBookReview"
-  }
-}
+"ibm-developer-skills-network/expressBookReview"
