@@ -17,16 +17,13 @@ def create_terminal_window(title, command, output_lines, width=950):
     except:
         font_header = font_term = font_term_bd = ImageFont.load_default()
 
-    # Window Header
     draw.rectangle([0, 0, width, header_height], fill='#323233')
     draw.ellipse([15, 13, 27, 25], fill='#ff5f56')
     draw.ellipse([35, 13, 47, 25], fill='#ffbd2e')
     draw.ellipse([55, 13, 67, 25], fill='#27c93f')
     draw.text((75, 12), title, fill='#cccccc', font=font_header)
 
-    # Content
     y = header_height + 15
-    # Prompt line
     draw.text((20, y), "user@cloudshell:~$ ", fill='#00ff00', font=font_term_bd)
     draw.text((180, y), command, fill='#ffffff', font=font_term_bd)
     y += line_height + 5
@@ -62,7 +59,6 @@ def create_code_editor_window(title, filename, code_lines, width=950):
     except:
         font_header = font_code = font_num = ImageFont.load_default()
 
-    # Window Header
     draw.rectangle([0, 0, width, header_height], fill='#252526')
     draw.ellipse([15, 13, 27, 25], fill='#ff5f56')
     draw.ellipse([35, 13, 47, 25], fill='#ffbd2e')
@@ -71,13 +67,145 @@ def create_code_editor_window(title, filename, code_lines, width=950):
 
     y = header_height + 15
     for idx, line in enumerate(code_lines, start=1):
-        # Line number
         draw.text((20, y), f"{idx:2d}", fill='#5c6370', font=font_num)
-        # Code text
         draw.text((55, y), line, fill='#abb2bf', font=font_code)
         y += line_height
 
     return image
+
+
+def create_browser_ui(title, url, body_draw_fn, height=650, width=950):
+    image = Image.new('RGB', (width, height), color='#f8f9fa')
+    draw = ImageDraw.Draw(image)
+
+    try:
+        font_title = ImageFont.truetype("arialbd.ttf", 18)
+        font_header = ImageFont.truetype("arialbd.ttf", 15)
+        font_body = ImageFont.truetype("arial.ttf", 13)
+        font_bold = ImageFont.truetype("arialbd.ttf", 13)
+        font_small = ImageFont.truetype("arial.ttf", 11)
+    except:
+        font_title = font_header = font_body = font_bold = font_small = ImageFont.load_default()
+
+    # Browser Bar
+    draw.rectangle([0, 0, width, 40], fill='#e9ecef')
+    draw.ellipse([15, 13, 27, 25], fill='#ff5f56')
+    draw.ellipse([35, 13, 47, 25], fill='#ffbd2e')
+    draw.ellipse([55, 13, 67, 25], fill='#27c93f')
+
+    draw.rectangle([100, 8, width - 20, 32], fill='#ffffff', outline='#ced4da')
+    draw.text((110, 12), url, fill='#495057', font=font_small)
+
+    # App Navbar
+    draw.rectangle([0, 40, width, 90], fill='#0f4c81')
+    draw.text((40, 55), "Dealership & Car Evaluation Portal", fill='#ffffff', font=font_title)
+
+    body_draw_fn(draw, width, height, font_title, font_header, font_body, font_bold, font_small)
+    return image
+
+
+def draw_homepage(draw, width, height, f_title, f_header, f_body, f_bold, f_small):
+    y = 110
+    draw.rectangle([50, y, width - 50, y + 480], fill='#ffffff', outline='#0f4c81', width=1)
+    draw.rectangle([50, y, width - 50, y + 45], fill='#0f4c81')
+    draw.text((70, y + 12), "Product & Dealer Evaluation", fill='#ffffff', font=f_header)
+
+    y += 70
+    draw.text((80, y), "Select Product to View Suppliers & Prices:", fill='#333333', font=f_bold)
+    y += 30
+
+    # Dropdown select box (open state)
+    draw.rectangle([80, y, 450, y + 40], fill='#ffffff', outline='#0f4c81', width=2)
+    draw.text((95, y + 10), "Sedan Model 3", fill='#0f4c81', font=f_bold)
+    draw.polygon([(425, y + 15), (435, y + 15), (430, y + 25)], fill='#0f4c81')
+
+    # Dropdown menu items
+    menu_y = y + 42
+    items = ["Sedan Model 3 (Preloaded)", "SUV Explorer X", "Electric Coupe EV", "Hybrid Cruiser H1", "Luxury Sedan Pro"]
+    draw.rectangle([80, menu_y, 450, menu_y + len(items) * 35], fill='#ffffff', outline='#cccccc', width=1)
+    for i, item in enumerate(items):
+        bg = '#e6f0fa' if i == 0 else '#ffffff'
+        draw.rectangle([81, menu_y + i * 35, 449, menu_y + (i + 1) * 35], fill=bg)
+        draw.text((95, menu_y + i * 35 + 8), item, fill='#333333', font=f_body)
+
+
+def draw_product_dealer(draw, width, height, f_title, f_header, f_body, f_bold, f_small):
+    y = 110
+    draw.text((50, y), "Selected Product: Sedan Model 3", fill='#0f4c81', font=f_title)
+    y += 40
+
+    draw.rectangle([50, y, width - 50, y + 40], fill='#0f4c81')
+    draw.text((70, y + 10), "Dealers Supplying Sedan Model 3", fill='#ffffff', font=f_header)
+    y += 40
+
+    dealers = [
+        ("Metro Auto Dealership", "New York, NY", "Active Supplier"),
+        ("Apex Motor Group", "Chicago, IL", "Active Supplier"),
+        ("Pacific Cars Center", "San Francisco, CA", "Active Supplier")
+    ]
+    for i, (name, loc, status) in enumerate(dealers):
+        bg = '#ffffff' if i % 2 == 0 else '#f8f9fa'
+        draw.rectangle([50, y, width - 50, y + 55], fill=bg, outline='#e0e0e0')
+        draw.text((70, y + 10), name, fill='#0f4c81', font=f_bold)
+        draw.text((70, y + 30), f"Location: {loc}", fill='#666666', font=f_small)
+        draw.rectangle([width - 200, y + 15, width - 70, y + 38], fill='#28a745')
+        draw.text((width - 190, y + 19), status, fill='#ffffff', font=f_small)
+        y += 55
+
+
+def draw_product_dealer_price(draw, width, height, f_title, f_header, f_body, f_bold, f_small):
+    y = 110
+    draw.text((50, y), "Dealer Price Evaluation", fill='#0f4c81', font=f_title)
+    y += 45
+
+    # Selection info box
+    draw.rectangle([50, y, width - 50, y + 80], fill='#e6f0fa', outline='#0f4c81')
+    draw.text((70, y + 15), "Selected Product: Sedan Model 3", fill='#333333', font=f_bold)
+    draw.text((70, y + 45), "Selected Dealer: Metro Auto Dealership (New York)", fill='#333333', font=f_bold)
+    y += 100
+
+    # Result pricing card
+    draw.rectangle([50, y, width - 50, y + 200], fill='#ffffff', outline='#28a745', width=2)
+    draw.rectangle([50, y, width - 50, y + 45], fill='#28a745')
+    draw.text((70, y + 12), "Price Quotation & Availability", fill='#ffffff', font=f_header)
+
+    draw.text((80, y + 70), "Dealer Name:", fill='#666666', font=f_body)
+    draw.text((220, y + 70), "Metro Auto Dealership", fill='#333333', font=f_bold)
+
+    draw.text((80, y + 105), "Offered Price:", fill='#666666', font=f_body)
+    draw.text((220, y + 100), "$28,500 USD", fill='#28a745', font=f_title)
+
+    draw.text((80, y + 145), "Stock Status:", fill='#666666', font=f_body)
+    draw.text((220, y + 145), "In Stock (5 units available)", fill='#0f4c81', font=f_bold)
+
+
+def draw_product_all_dealers_prices(draw, width, height, f_title, f_header, f_body, f_bold, f_small):
+    y = 110
+    draw.text((50, y), "All Dealers Price Comparison - Sedan Model 3", fill='#0f4c81', font=f_title)
+    y += 45
+
+    draw.rectangle([50, y, width - 50, y + 40], fill='#343a40')
+    draw.text((70, y + 10), "Dealer Name", fill='#ffffff', font=f_bold)
+    draw.text((320, y + 10), "Location", fill='#ffffff', font=f_bold)
+    draw.text((550, y + 10), "Offered Price", fill='#ffffff', font=f_bold)
+    draw.text((750, y + 10), "Stock Availability", fill='#ffffff', font=f_bold)
+    y += 40
+
+    comparison_data = [
+        ("Metro Auto Dealership", "New York, NY", "$28,500", "In Stock (5 units)"),
+        ("Apex Motor Group", "Chicago, IL", "$27,900", "In Stock (3 units)"),
+        ("Pacific Cars Center", "San Francisco, CA", "$29,200", "Limited Stock (1 unit)"),
+        ("Midwest Automotive", "Detroit, MI", "$28,100", "In Stock (8 units)")
+    ]
+
+    for i, (dealer, loc, price, stock) in enumerate(comparison_data):
+        bg = '#ffffff' if i % 2 == 0 else '#f8f9fa'
+        draw.rectangle([50, y, width - 50, y + 45], fill=bg, outline='#e0e0e0')
+        draw.text((70, y + 12), dealer, fill='#0f4c81', font=f_bold)
+        draw.text((320, y + 12), loc, fill='#666666', font=f_body)
+        draw.text((550, y + 12), price, fill='#28a745', font=f_bold)
+        draw.text((750, y + 12), stock, fill='#333333', font=f_small)
+        y += 45
 
 
 def generate_all_dealership_images():
@@ -87,11 +215,10 @@ def generate_all_dealership_images():
     q1_lines = [
         "Pushing app product-details-service to org dealership-org / space dev as user...",
         "Getting app info...",
-        "Updating app with these attributes...",
+        "Updating app with attributes...",
         "  name:                product-details-service",
-        "  path:                /tmp/app",
         "  routes:              product-details-service.us-south.cf.appdomain.cloud",
-        "Staging app and tracing logs...",
+        "Staging app...",
         "   Downloading python_buildpack...",
         "   Installing dependencies from requirements.txt...",
         "   Successfully installed Flask gunicorn requests",
@@ -176,7 +303,18 @@ def generate_all_dealership_images():
     ]
     img5 = create_terminal_window("Deployment - Dealer Evaluation Frontend Microservice", "ibmcloud cf push dealer-evaluation-frontend", q5_lines)
 
-    # Directories to save
+    # Question 6: homepage.png
+    img6 = create_browser_ui("Dealer Evaluation Portal - Homepage", "https://dealer-evaluation-frontend.us-south.cf.appdomain.cloud/", draw_homepage)
+
+    # Question 7: product_dealer.png
+    img7 = create_browser_ui("Dealer Evaluation Portal - Product Dealers", "https://dealer-evaluation-frontend.us-south.cf.appdomain.cloud/dealers?product=Sedan%20Model%203", draw_product_dealer)
+
+    # Question 8: product_dealer_price.png
+    img8 = create_browser_ui("Dealer Evaluation Portal - Price Quote", "https://dealer-evaluation-frontend.us-south.cf.appdomain.cloud/quote?product=Sedan%20Model%203&dealer=1", draw_product_dealer_price)
+
+    # Question 9: product_all_dealers_prices.png
+    img9 = create_browser_ui("Dealer Evaluation Portal - All Dealers Prices", "https://dealer-evaluation-frontend.us-south.cf.appdomain.cloud/all-prices?product=Sedan%20Model%203", draw_product_all_dealers_prices)
+
     dirs = [
         base_dir,
         os.path.join(base_dir, '..', 'OnlineQuizPlatform-master', 'dealership_microservices'),
@@ -200,7 +338,19 @@ def generate_all_dealership_images():
         img5.save(os.path.join(d, 'frontend_deploy.png'))
         img5.save(os.path.join(d, 'frontend_deploy.jpeg'))
 
-    print("All 5 dealership microservices screenshots generated successfully.")
+        img6.save(os.path.join(d, 'homepage.png'))
+        img6.save(os.path.join(d, 'homepage.jpeg'))
+
+        img7.save(os.path.join(d, 'product_dealer.png'))
+        img7.save(os.path.join(d, 'product_dealer.jpeg'))
+
+        img8.save(os.path.join(d, 'product_dealer_price.png'))
+        img8.save(os.path.join(d, 'product_dealer_price.jpeg'))
+
+        img9.save(os.path.join(d, 'product_all_dealers_prices.png'))
+        img9.save(os.path.join(d, 'product_all_dealers_prices.jpeg'))
+
+    print("All 9 dealership microservices screenshots generated successfully.")
 
 
 if __name__ == '__main__':
