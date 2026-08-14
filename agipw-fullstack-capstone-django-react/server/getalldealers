@@ -1,0 +1,3 @@
+curl -X GET http://localhost:3000/fetchDealers
+
+[{"id":1,"city":"El Paso","state":"Texas","st":"TX","address":"333 Callope Street","zip":"79902","lat":31.7587,"long":-106.4869,"short_name":"Metro Auto","full_name":"Metro Auto Dealership"},{"id":2,"city":"Minneapolis","state":"Minnesota","st":"MN","address":"93 Northport Drive","zip":"55401","lat":44.9778,"long":-93.265,"short_name":"Apex Motors","full_name":"Apex Motor Group"}]

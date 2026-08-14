@@ -1,0 +1,3 @@
+curl -X GET http://localhost:3000/fetchReviews/dealer/1
+
+[{"id":1,"name":"John Smith","dealership":1,"review":"Great service and smooth purchasing process!","purchase":true,"purchase_date":"02/15/2026","car_make":"Toyota","car_model":"Camry","car_year":2024,"sentiment":"positive"}]
