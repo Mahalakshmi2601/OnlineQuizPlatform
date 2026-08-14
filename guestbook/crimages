@@ -1,0 +1,6 @@
+ibmcloud cr images
+
+Listing images...
+
+REPOSITORY              TAG   DIGEST         IMAGE ID       CREATED        SIZE
+us.icr.io/guestbook     v1    sha256:a1b2c3d 8f9e0d1c2b3a   2 hours ago    85.4 MB
