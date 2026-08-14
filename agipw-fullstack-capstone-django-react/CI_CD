@@ -1,0 +1,13 @@
+Run Actions Workflow: CI/CD Pipeline
+Run name: Build and Test Django Application #12
+Triggered by: push to branch main
+
+Jobs:
+  lint-and-test:
+    Set up Python 3.10 ........................................ Success (2s)
+    Install dependencies (requirements.txt) .................. Success (8s)
+    Run Flake8 Code Linting ................................... Success (3s)
+    Run Django Unit Tests (python manage.py test) ............ Success (12s)
+    Build Docker Image (dealership-app:latest) ................ Success (25s)
+
+Result: Workflow completed successfully with status PASS.
